@@ -38,7 +38,7 @@ casbin:
 
 # system configuration
 system:
-  env: 'public'  # Change to "develop" to skip authentication for development mode
+  env: 'develop'  # Change to "develop" to skip authentication for development mode
   addr: 8888
   db-type: 'mysql'
   oss-type: 'local'
@@ -56,7 +56,7 @@ mysql:
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
   db-name: 'qmPlus'
   username: 'root'
-  password: 'Aa@6447985'
+  password: 'root'
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: false
