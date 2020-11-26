@@ -1,48 +1,11 @@
 <template>
 <div>
-    <el-form :model="formData" label-position="right" label-width="80px">
-               <el-form-item label="ID:"><el-input v-model.number="formData.id" clearable placeholder="请输入"></el-input>
-               </el-form-item>
-
-               <el-form-item label="名字:">
-                   <el-input v-model="formData.studentName" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-
-               <el-form-item label="年龄:"><el-input v-model.number="formData.age" clearable placeholder="请输入"></el-input>
-               </el-form-item>
-
-               <el-form-item label="性别:">
-                   <el-input v-model="formData.gender" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-
-               <el-form-item label="生日:">
-                   <el-input v-model="formData.birthday" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-
-               <el-form-item label="家长名字:">
-                   <el-input v-model="formData.parentName" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-
-               <el-form-item label="家长电话:">
-                   <el-input v-model="formData.parentPhone" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-
-               <el-form-item label="所属班级:">
-                   <el-input v-model="formData.belongClass" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-
-               <el-form-item label="入学时间:">
-                   <el-input v-model="formData.admissionDate" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-
-               <el-form-item label="备注:">
-                   <el-input v-model="formData.remark" clearable placeholder="请输入" ></el-input>
-               </el-form-item>
-               <el-form-item>
-           <el-button @click="save" type="primary">保存</el-button>
-           <el-button @click="back" type="primary">返回</el-button>
-           </el-form-item>
-    </el-form>
+    <DescriptionList title="退款申请" col="6" :content="data">
+        <Description term="取货单号">1000000000</Description>
+        <Description term="状态">已取货</Description>
+        <Description term="销售单号">1234123421</Description>
+        <Description term="子订单">3214321432</Description>
+    </DescriptionList>
 </div>
 </template>
 
@@ -53,12 +16,15 @@ import {
     findTblStudents
 } from "@/api/students";  //  此处请自行替换地址
 import infoList from "@/mixins/infoList";
+import DescriptionList from "@/components/description"; // 引入组件
 export default {
-  name: "TblStudents",
+  name: "StudentsDetail",
   mixins: [infoList],
+  components: {DescriptionList},
   data() {
     return {
-      type: "",formData: {
+      type: "",
+      formData: {
             id:0,
             studentName:"",
             age:0,
@@ -98,19 +64,16 @@ export default {
         this.$router.go(-1)
     }
   },
-  async created() {
-   // 建议通过url传参获取目标数据ID 调用 find方法进行查询数据操作 从而决定本页面是create还是update 以下为id作为url参数示例
-    if(this.$route.query.id){
-    const res = await findTblStudents({ ID: this.$route.query.id })
-    if(res.code == 0){
-       this.formData = res.data.restudents
-       this.type == "update"
-     }
-    }else{
-     this.type == "create"
-   }
-
-}
+  async created () {
+    // 建议通过url传参获取目标数据ID 调用 find方法进行查询数据操作 从而决定本页面是create还是update 以下为id作为url参数示例
+    if (this.$route.query.id) {
+      const res = await findTblStudents({ ID: this.$route.query.id })
+      console.log(res)
+      if (res.code == 0) {
+        this.formData = res.data.restudents
+      }
+    }
+  }
 };
 </script>
 

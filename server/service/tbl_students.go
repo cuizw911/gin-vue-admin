@@ -74,6 +74,9 @@ func GetTblStudentsInfoList(info request.TblStudentsSearch) (err error, list int
 	db := global.GVA_DB.Model(&model.TblStudents{})
 	var studentss []model.TblStudents
 	// 如果有条件搜索 下方会自动创建搜索语句
+	if info.Name != "" {
+		db = db.Where("`name` LIKE ?", "%"+info.Name+"%")
+	}
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&studentss).Error
 	return err, studentss, total

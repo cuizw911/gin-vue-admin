@@ -2,11 +2,14 @@
     <div>
         <div class="search-term">
             <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
+                <el-form-item label="学生名字">
+                    <el-input placeholder="搜索条件" v-model="searchInfo.name" clearable></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button @click="onSubmit" type="primary">查询</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="openDialog" type="primary">新增学生信息表</el-button>
+                    <el-button @click="openDialog" type="primary">新增学生</el-button>
                 </el-form-item>
                 <el-form-item>
                     <el-popover placement="top" v-model="deleteVisible" width="160">
@@ -49,14 +52,15 @@
 
             <el-table-column label="入学时间" prop="admissionDate" width="120"></el-table-column>
 
-<!--            <el-table-column label="日期" width="180">-->
-<!--                <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>-->
-<!--            </el-table-column>-->
+            <!--            <el-table-column label="日期" width="180">-->
+            <!--                <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>-->
+            <!--            </el-table-column>-->
 
-<!--            <el-table-column label="备注" prop="remark" width="120"></el-table-column>-->
+            <!--            <el-table-column label="备注" prop="remark" width="120"></el-table-column>-->
 
             <el-table-column label="按钮组">
                 <template slot-scope="scope">
+                    <el-button @click="toDetail(scope.row)" size="small" type="success">详情</el-button>
                     <el-button class="table-button" @click="updateTblStudents(scope.row)" size="small" type="primary"
                                icon="el-icon-edit">变更
                     </el-button>
@@ -84,25 +88,25 @@
         ></el-pagination>
 
         <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="新增学生">
-            <el-form :model="formData" :rules="rules" label-position="right" label-width="80px">
-                <el-form-item label="学生名字:">
+            <el-form :model="formData" :rules="rules" ref="formData" label-position="right" label-width="100px">
+                <el-form-item label="学生名字:" prop="name">
                     <el-col :span="8">
-                        <el-input v-model="formData.name" clearable placeholder="请输入"></el-input>
+                        <el-input v-model="formData.name" clearable placeholder="请输入学生名字"></el-input>
                     </el-col>
                 </el-form-item>
 
-                <el-form-item label="学生年龄:">
-                    <el-col :span="8">
-                        <el-input v-model.number="formData.age" clearable placeholder="请输入"></el-input>
-                    </el-col>
-                </el-form-item>
+                <!--                <el-form-item label="学生年龄:">-->
+                <!--                    <el-col :span="8">-->
+                <!--                        <el-input v-model.number="formData.age" clearable placeholder="请输入"></el-input>-->
+                <!--                    </el-col>-->
+                <!--                </el-form-item>-->
 
                 <el-form-item label="学生性别:">
                     <el-radio v-model="formData.gender" label="1">男生</el-radio>
                     <el-radio v-model="formData.gender" label="2">女生</el-radio>
                 </el-form-item>
 
-                <el-form-item label="学生生日:">
+                <el-form-item label="学生生日:" prop="birthday">
                     <div class="block">
                         <el-date-picker
                                 v-model="formData.birthday"
@@ -113,15 +117,16 @@
                     </div>
                 </el-form-item>
 
-                <el-form-item label="家长名字:">
+                <el-form-item label="家长名字:" prop="parentName">
                     <el-col :span="8">
                         <el-input v-model="formData.parentName" clearable placeholder="请输入家长名字"></el-input>
                     </el-col>
                 </el-form-item>
 
-                <el-form-item label="家长电话:">
+                <el-form-item label="家长电话:" prop="parentPhone">
                     <el-col :span="8">
-                        <el-input v-model="formData.parentPhone" clearable placeholder="请输入电话" maxlength="11"></el-input>
+                        <el-input v-model="formData.parentPhone" clearable placeholder="请输入电话"
+                                  maxlength="11"></el-input>
                     </el-col>
                 </el-form-item>
 
@@ -148,7 +153,8 @@
                 </el-form-item>
 
                 <el-form-item label="备注:">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="formData.remark" maxlength="250" show-word-limit></el-input>
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="formData.remark" maxlength="250"
+                              show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <div class="dialog-footer" slot="footer">
@@ -195,19 +201,20 @@ export default {
         remark: '',
       },
       classList: [{
-        value: "1",
-        label: "小一班",
+        value: '1',
+        label: '小一班',
       }, {
-        value: "2",
-        label: "小二班",
+        value: '2',
+        label: '小二班',
       }, {
-        value: "3",
-        label: "小三班",
+        value: '3',
+        label: '小三班',
       }],
       rules: {
-        'formData.name': [{ require: true, message: "请输入学生名字", trigger: "blur" }],
-        parentName: [{ require: true, message: "请输入家长名字", trigger: "blur" }],
-        parentPhone: [{ require: true, pattern: /^1[34578]\d{9}$/, message: "请输入正确的手机号", trigger: "change" }],
+        name: [{ required: true, message: '请输入学生名字', trigger: 'blur' }],
+        birthday: [{ required: true, message: '请输入学生名字', trigger: 'blur' }],
+        parentName: [{ required: true, message: '请输入家长名字', trigger: 'blur' }],
+        parentPhone: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }],
       }
     }
   },
@@ -238,14 +245,14 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    genderFmt(row) {
+    genderFmt (row) {
       if (row.gender === '1') {
-        return "男生"
+        return '男生'
       } else {
-        return "女生"
+        return '女生'
       }
     },
-    classFmt(row) {
+    classFmt (row) {
       let className
       this.classList.some(v => {
         if (row.belongClass === v.value) {
@@ -286,6 +293,14 @@ export default {
         this.dialogFormVisible = true
       }
     },
+    toDetail (row) {
+      this.$router.push({
+        name: "studentDetail",
+        params: {
+          id: row.ID
+        }
+      })
+    },
     closeDialog () {
       this.dialogFormVisible = false
       this.formData = {
@@ -299,8 +314,8 @@ export default {
         belongClass: '',
         admissionDate: '',
         remark: '',
-
       }
+      this.$refs.formData.clearValidate();
     },
     async deleteTblStudents (row) {
       this.visible = false
@@ -314,32 +329,30 @@ export default {
       }
     },
     async enterDialog () {
-      let res
-      // this.$refs.formData.validate(async (v) => {
-      //
-      //
-      //
-      // }
-      //
-      switch (this.type) {
-        case 'create':
-          res = await createTblStudents(this.formData)
-          break
-        case 'update':
-          res = await updateTblStudents(this.formData)
-          break
-        default:
-          res = await createTblStudents(this.formData)
-          break
-      }
-      if (res.code == 0) {
-        this.$message({
-          type: 'success',
-          message: '创建/更改成功'
-        })
-        this.closeDialog()
-        this.getTableData()
-      }
+      this.$refs.formData.validate(async (v) => {
+        if (v) {
+          let res
+          switch (this.type) {
+            case 'create':
+              res = await createTblStudents(this.formData)
+              break
+            case 'update':
+              res = await updateTblStudents(this.formData)
+              break
+            default:
+              res = await createTblStudents(this.formData)
+              break
+          }
+          if (res.code == 0) {
+            this.$message({
+              type: 'success',
+              message: '创建/更改成功'
+            })
+            this.closeDialog()
+            this.getTableData()
+          }
+        }
+      })
     },
     openDialog () {
       this.type = 'create'
