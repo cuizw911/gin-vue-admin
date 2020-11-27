@@ -38,15 +38,15 @@
 
             <el-table-column label="名字" prop="name" width="120"></el-table-column>
 
-            <el-table-column label="年龄" prop="age" width="120"></el-table-column>
+            <el-table-column label="年龄" prop="age" width="80"></el-table-column>
 
-            <el-table-column label="性别" prop="gender" width="120" :formatter="genderFmt"></el-table-column>
+            <el-table-column label="性别" prop="gender" width="80" :formatter="genderFmt"></el-table-column>
 
             <el-table-column label="生日" prop="birthday" width="120"></el-table-column>
 
             <el-table-column label="家长名字" prop="parentName" width="120"></el-table-column>
 
-            <el-table-column label="家长电话" prop="parentPhone" width="120"></el-table-column>
+            <el-table-column label="联系电话" prop="parentPhone" width="120"></el-table-column>
 
             <el-table-column label="所属班级" prop="belongClass" width="120" :formatter="classFmt"></el-table-column>
 
@@ -60,7 +60,9 @@
 
             <el-table-column label="按钮组">
                 <template slot-scope="scope">
-                    <el-button @click="toDetail(scope.row)" size="small" type="success">详情</el-button>
+                    <el-button @click="toDetail(scope.row)" size="small" type="success"
+                               icon="el-icon-tickets">详情
+                    </el-button>
                     <el-button class="table-button" @click="updateTblStudents(scope.row)" size="small" type="primary"
                                icon="el-icon-edit">变更
                     </el-button>
@@ -123,7 +125,7 @@
                     </el-col>
                 </el-form-item>
 
-                <el-form-item label="家长电话:" prop="parentPhone">
+                <el-form-item label="联系电话:" prop="parentPhone">
                     <el-col :span="8">
                         <el-input v-model="formData.parentPhone" clearable placeholder="请输入电话"
                                   maxlength="11"></el-input>
@@ -174,6 +176,7 @@ import {
   findTblStudents,
   getTblStudentsList
 } from '@/api/students'  //  此处请自行替换地址
+import { findSysDictionary } from '@/api/sysDictionary'
 import { formatTimeToStr } from '@/utils/date'
 import infoList from '@/mixins/infoList'
 
@@ -200,16 +203,7 @@ export default {
         admissionDate: '',
         remark: '',
       },
-      classList: [{
-        value: '1',
-        label: '小一班',
-      }, {
-        value: '2',
-        label: '小二班',
-      }, {
-        value: '3',
-        label: '小三班',
-      }],
+      classList: [],
       rules: {
         name: [{ required: true, message: '请输入学生名字', trigger: 'blur' }],
         birthday: [{ required: true, message: '请输入学生名字', trigger: 'blur' }],
@@ -254,10 +248,9 @@ export default {
     },
     classFmt (row) {
       let className
-      this.classList.some(v => {
-        if (row.belongClass === v.value) {
+      this.classList.forEach(v => {
+        if (v.value.toString() === row.belongClass) {
           className = v.label
-          return true
         }
       })
       return className
@@ -295,7 +288,7 @@ export default {
     },
     toDetail (row) {
       this.$router.push({
-        name: "studentDetail",
+        name: 'studentDetail',
         params: {
           id: row.ID
         }
@@ -315,7 +308,7 @@ export default {
         admissionDate: '',
         remark: '',
       }
-      this.$refs.formData.clearValidate();
+      this.$refs.formData.clearValidate()
     },
     async deleteTblStudents (row) {
       this.visible = false
@@ -357,11 +350,25 @@ export default {
     openDialog () {
       this.type = 'create'
       this.dialogFormVisible = true
+    },
+    async getClassList () {
+      const res = await findSysDictionary({ type: 'class' })
+      if (res.code === 0) {
+        const dicDetails = res.data.resysDictionary.sysDictionaryDetails
+        let details = []
+        dicDetails.forEach((item, index) => {
+          details[index] = {
+            value: item.value,
+            label: item.label,
+          }
+        })
+        this.classList = details
+      }
     }
   },
   async created () {
+    await this.getClassList()
     await this.getTableData()
-
   }
 }
 </script>
