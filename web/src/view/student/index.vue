@@ -247,9 +247,9 @@ export default {
       }
     },
     classFmt (row) {
-      let className
+      let className;
       this.classList.forEach(v => {
-        if (v.value.toString() === row.belongClass) {
+        if (v.value === row.belongClass) {
           className = v.label
         }
       })
@@ -336,7 +336,7 @@ export default {
               res = await createTblStudents(this.formData)
               break
           }
-          if (res.code == 0) {
+          if (res.code === 0) {
             this.$message({
               type: 'success',
               message: '创建/更改成功'
@@ -348,17 +348,17 @@ export default {
       })
     },
     openDialog () {
-      this.type = 'create'
-      this.dialogFormVisible = true
+      this.type = 'create';
+      this.dialogFormVisible = true;
     },
     async getClassList () {
       const res = await findSysDictionary({ type: 'class' })
       if (res.code === 0) {
         const dicDetails = res.data.resysDictionary.sysDictionaryDetails
-        let details = []
+        let details = [];
         dicDetails.forEach((item, index) => {
           details[index] = {
-            value: item.value,
+            value: item.value.toString(),
             label: item.label,
           }
         })

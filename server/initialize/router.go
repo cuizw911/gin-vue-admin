@@ -48,6 +48,8 @@ func Routers() *gin.Engine {
 		router.InitSysDictionaryDetailRouter(PrivateGroup)   // 字典详情管理
 		router.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
 		router.InitTblStudentsRouter(PrivateGroup)           // 学生信息管理
+		router.InitTblTeacherInfoRouter(PrivateGroup)		 // 教师信息管理
+		router.InitTblCourseInfoRouter(PrivateGroup)		 // 课程信息管理
 	}
 	global.GVA_LOG.Info("router register success")
 	return Router

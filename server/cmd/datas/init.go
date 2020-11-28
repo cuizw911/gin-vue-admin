@@ -47,6 +47,8 @@ func InitMysqlTables(db *gorm.DB) {
 		model.SysBaseMenuParameter{},
 		model.ExaFileUploadAndDownload{},
 		model.TblStudents{},
+		model.TblTeacherInfo{},
+		model.TblCourseInfo{},
 	)
 	if err != nil {
 		color.Warn.Printf("[Mysql]-->初始化数据表失败,err: %v\n", err)

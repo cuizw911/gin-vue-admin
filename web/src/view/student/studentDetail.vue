@@ -78,7 +78,7 @@ export default {
   },
   filters: {
     formatGender: function (gender) {
-      if (gender != null && gender != '') {
+      if (gender != null && gender !== '') {
         return gender === '1' ? '男生' : '女生'
       } else {
         return ''
@@ -90,17 +90,17 @@ export default {
       let className = '';
       this.classList.some(v => {
         if (c === v.value.toString()) {
-          className = v.label
+          className = v.label;
           return true
         }
       })
       return className
     },
     async getClassList () {
-      const res = await findSysDictionary({ type: 'class' })
+      const res = await findSysDictionary({ type: 'class' });
       if (res.code === 0) {
-        const dicDetails = res.data.resysDictionary.sysDictionaryDetails
-        let details = []
+        const dicDetails = res.data.resysDictionary.sysDictionaryDetails;
+        let details = [];
         dicDetails.forEach((item, index) => {
           details[index] = {
             value: item.value,
@@ -114,8 +114,8 @@ export default {
   async created () {
     await this.getClassList()
     if (this.$route.params.id) {
-      const res = await findTblStudents({ ID: this.$route.params.id })
-      if (res.code == 0) {
+      const res = await findTblStudents({ ID: this.$route.params.id });
+      if (res.code === 0) {
         this.studentDetail = res.data.restudents
       }
     }
